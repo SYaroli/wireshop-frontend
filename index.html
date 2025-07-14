@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wire Shop Login</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('czm-logo.png') no-repeat center center fixed;
+      background-size: 75%;
+      background-color: #f9f9f9;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .login-container {
+      width: 240px;
+      margin: 400px auto 0 auto;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+
+      /* 💥 3D EFFECTS */
+      box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.2),   /* strong outer drop shadow */
+        inset 0 1px 3px rgba(255, 255, 255, 0.4); /* soft inner light for "pop" */
+      backdrop-filter: blur(2px); /* subtle glassy feel */
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.4rem;
+      margin: 0.4rem 0;
+      font-size: 0.9rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.5rem;
+      font-size: 0.9rem;
+      background: #4285f4;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 0.6rem;
+      transition: box-shadow 0.2s ease;
+    }
+
+    button:hover {
+      box-shadow: 0 0 10px #4285f4;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Wire Shop Login</h2>
+    <form id="loginForm">
+      <input type="text" id="username" placeholder="Username" required autofocus />
+      <input type="password" id="pin" placeholder="PIN" required />
+      <button type="submit">Login</button>
+    </form>
+  </div>
+  <script src="main.js"></script>
+</body>
+</html>
