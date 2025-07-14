@@ -1,206 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WireShop Dashboard</title>
-  <link rel="stylesheet" href="style.css" />
-  <style>
-    body {
-      background: url('czm-logo.png') no-repeat center center fixed;
-      background-size: 75%;
-      background-color: #f9f9f9;
-      font-family: Arial, sans-serif;
-    }
+<script src="catalog.js"></script>
+<script>
+  // Auth check
+  if (!localStorage.getItem('userRole')) {
+    alert('Access denied.');
+    window.location.href = 'index.html';
+  }
 
-    .header {
-      text-align: center;
-      background: rgba(255, 255, 255, 0.85);
-      padding: 1.5rem 2rem 1rem 2rem;
-      border-radius: 10px;
-      margin: 1rem auto 0.5rem auto;
-      width: fit-content;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
+  // Show admin link if admin
+  if (localStorage.getItem('userRole') === 'admin') {
+    document.getElementById('adminLink').style.display = 'block';
+  }
 
-    .logout-container {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 0.5rem;
-    }
+  // Populate part dropdown
+  const partSelect = document.getElementById('partSelect');
+  catalog.forEach(item => {
+    const option = document.createElement('option');
+    option.value = item.partNumber;
+    option.textContent = `${item.partNumber} - ${item.name}`;
+    partSelect.appendChild(option);
+  });
 
-    #logoutBtn, #adminLink {
-      padding: 0.5rem 1rem;
-      background: #4285f4;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-    }
-
-    .content {
-      background: rgba(255, 255, 255, 0.9);
-      padding: 2rem;
-      margin: 2rem auto;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 1000px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    textarea {
-      display: block;
-      width: 100%;
-      margin: 0.5rem 0;
-    }
-
-    #partDetails {
-      background: #f2f2f2;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      padding: 0.5rem;
-      margin-top: 0.5rem;
-      font-size: 0.9rem;
-      color: #333;
-    }
-
-    table#logTable {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-
-    #logTable th,
-    #logTable td {
-      border: 1px solid #ccc;
-      padding: 0.6rem;
-      text-align: left;
-      font-size: 0.9rem;
-    }
-
-    #logTable th {
-      background-color: #f0f0f0;
-    }
-
-    #logTable tbody tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-
-    #logTable tbody tr:hover {
-      background-color: #e8f0ff;
-    }
-
-    .timer-display {
-      font-family: monospace;
-      color: #333;
-      font-weight: bold;
-    }
-
-    #deleteLogBtn {
-      background-color: #c0392b;
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-left: 10px;
-    }
-  </style>
-</head>
-<body>
-  <div class="header">
-    <h1>Wire Shop Dashboard</h1>
-    <p id="welcomeMessage" style="margin-top: 0.5rem; font-size: 1.1rem; color: #444;"></p>
-    <div id="userDisplay"></div>
-  </div>
-
-  <div class="logout-container">
-    <button id="logoutBtn">Logout</button>
-    <a href="admin.html" id="adminLink" style="display: none;">Live View</a>
-  </div>
-
-  <div class="content">
-    <div class="log-section">
-      <h2>Log New Entry</h2>
-      <select id="partSelect">
-        <option value="">Select Part</option>
-      </select>
-
-      <div id="partDetails"></div>
-
-      <select id="actionSelect">
-        <option value="">Select Action</option>
-        <option value="Start">Start</option>
-        <option value="Pause">Pause</option>
-        <option value="Continue">Continue</option>
-        <option value="Finish">Finish</option>
-      </select>
-
-      <textarea id="notesInput" placeholder="Enter notes (optional)..."></textarea>
-      <button id="submitLogBtn">Submit Log</button>
-      <button id="deleteLogBtn" style="display:none">Delete All Logs</button>
-    </div>
-
-    <div class="log-history">
-      <h2>Log History</h2>
-      <table id="logTable">
-        <thead>
-          <tr>
-            <th>Part Number</th>
-            <th>Action</th>
-            <th>Timestamp</th>
-            <th>Notes</th>
-            <th>Total Time</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </div>
-
-  <script src="catalog.js"></script>
-  <script>
-    const partSelect = document.getElementById('partSelect');
-    const partDetails = document.getElementById('partDetails');
-
-    function populatePartsDropdown() {
-      if (typeof catalog !== 'undefined') {
-        catalog.forEach(item => {
-          const option = document.createElement('option');
-          option.value = item.partNumber;
-          option.textContent = `${item.partNumber} — ${item.name}`;
-          partSelect.appendChild(option);
-        });
-      } else {
-        console.error('Catalog not found or not loaded');
-      }
-    }
-
-    partSelect.addEventListener('change', () => {
-      const selected = partSelect.value;
-      const part = catalog.find(p => p.partNumber === selected);
-      if (part) {
-        partDetails.innerHTML = `
-          <strong>Expected Time:</strong> ${part.hours} hours<br />
-          <strong>Notes:</strong> ${part.notes || '—'}
-        `;
-      } else {
-        partDetails.innerHTML = '';
-      }
+  // Logout button fix
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', function() {
+      localStorage.clear();
+      window.location.href = 'index.html';
     });
+  } else {
+    console.error('Logout button not found - check HTML ID');
+  }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      populatePartsDropdown();
+  // Submit log button (basic test: alert data)
+  const submitLogBtn = document.getElementById('submitLogBtn');
+  if (submitLogBtn) {
+    submitLogBtn.addEventListener('click', function() {
+      const part = document.getElementById('partSelect').value;
+      const action = document.getElementById('actionSelect').value;
+      const notes = document.getElementById('notesInput').value;
+      const timestamp = new Date().toISOString();
 
-      const user = localStorage.getItem("loggedInUser") || "";
-      if (user.toLowerCase() === "shane") {
-        document.getElementById("adminLink").style.display = "inline-block";
+      if (!part || !action) {
+        alert('Please select part and action.');
+        return;
       }
+
+      // Test: Show data in alert (later send to backend)
+      alert(`Logged: Part ${part}, Action: ${action}, Notes: ${notes}, Time: ${timestamp}`);
+
+      // Optional: Add to local history table for testing
+      const logTableBody = document.querySelector('#logTable tbody');
+      const row = document.createElement('tr');
+      row.innerHTML = `<td>${part}</td><td>${action}</td><td>${timestamp}</td><td>${notes}</td><td>0 min</td>`;
+      logTableBody.appendChild(row);
     });
-  </script>
-  <script src="main.js"></script>
-</body>
-</html>
+  } else {
+    console.error('Submit button not found - check HTML ID');
+  }
+</script>
