@@ -23,6 +23,7 @@
 
   <script src="users.js"></script>
   <script>
+    console.log('users.js loaded:', users); // Debug: Check if users array loads
     const loginForm = document.getElementById('loginForm');
     loginForm.addEventListener('submit', function(event) {
       event.preventDefault(); // Prevent page reload
@@ -30,22 +31,23 @@
       const username = document.getElementById('username').value.trim().toLowerCase();
       const pin = document.getElementById('pin').value;
 
-      // Find matching user
+      console.log('Attempting login with:', username, pin); // Debug
+
       const user = users.find(u => u.username.toLowerCase() === username && u.pin === pin);
 
+      console.log('User found:', user); // Debug: Should show object if match
+
       if (user) {
-        // Store role in localStorage for session (clears on browser close)
         localStorage.setItem('userRole', user.role);
         localStorage.setItem('username', user.username);
-        // Redirect based on role (admin goes to admin.html, others to dashboard.html)
+        console.log('Login success, redirecting...'); // Debug
         if (user.role === 'admin') {
           window.location.href = 'admin.html';
         } else {
           window.location.href = 'dashboard.html';
         }
       } else {
-        alert('Invalid username or PIN. Please try again.');
-        // Clear form on failure
+        alert('Invalid username or PIN. Please try again.'); // Change to this if yours says "access denied"
         loginForm.reset();
       }
     });
