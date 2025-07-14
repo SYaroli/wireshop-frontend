@@ -1,140 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Live View</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f2f5;
-      padding: 2rem;
-    }
-
-    h1 {
-      text-align: center;
-    }
-
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-
-    .back-button {
-      padding: 0.5rem 1rem;
-      background-color: #4285f4;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-
-    th, td {
-      border: 1px solid #ccc;
-      padding: 0.75rem;
-      text-align: left;
-    }
-
-    th {
-      background-color: #f8f8f8;
-    }
-
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-
-    .timer {
-      font-family: monospace;
-      font-weight: bold;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="top-bar">
-    <a href="dashboard.html" class="back-button">← Back to Dashboard</a>
+  <div class="header">
+    <a href="dashboard.html">← Back to Dashboard</a>
     <h1>Live Technician Activity</h1>
-    <div style="width: 140px;"></div>
+  </div>
+  <div class="content">
+    <table id="activityTable">
+      <thead>
+        <tr>
+          <th>Technician</th>
+          <th>Part</th>
+          <th>Action</th>
+          <th>Notes</th>
+          <th>Time Active</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Rows will be added here dynamically -->
+      </tbody>
+    </table>
   </div>
 
-  <table id="liveTable">
-    <thead>
-      <tr>
-        <th>Technician</th>
-        <th>Part</th>
-        <th>Action</th>
-        <th>Notes</th>
-        <th>Time Active</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
   <script>
-    const loggedInUser = localStorage.getItem("loggedInUser") || "";
-    if (loggedInUser.toLowerCase() !== "shane") {
-      alert("Access denied.");
-      window.location.href = "index.html";
+    // Auth check: Only allow if logged in as admin
+    const userRole = localStorage.getItem('userRole');
+    if (!userRole || userRole !== 'admin') {
+      alert('Access denied.');
+      window.location.href = 'index.html'; // Redirect to login
+    } else {
+      console.log('Admin access granted for:', localStorage.getItem('username')); // Debug in console
+      // Future code to load live activity goes here
     }
-
-    function formatTime(ms) {
-      const totalSeconds = Math.floor(ms / 1000);
-      const hours = Math.floor(totalSeconds / 3600);
-      const minutes = Math.floor((totalSeconds % 3600) / 60);
-      const seconds = totalSeconds % 60;
-      return `${hours}h ${minutes}m ${seconds}s`;
-    }
-
-    function loadLiveView() {
-      const table = document.getElementById("liveTable").getElementsByTagName("tbody")[0];
-      table.innerHTML = "";
-
-      const logs = JSON.parse(localStorage.getItem("harnessLogs") || "[]");
-      const timers = JSON.parse(localStorage.getItem("harnessTimers") || "{}");
-
-      const latestLogPerUser = {};
-
-      logs.forEach(log => {
-        // Keep only non-finished logs
-        if (log.action !== "Finish") {
-          latestLogPerUser[log.user] = log;
-        }
-      });
-
-      Object.values(latestLogPerUser).forEach(log => {
-        const key = `${log.user}_${log.part}`;
-        const timer = timers[key];
-
-        if (!timer) return; // Skip if no active timer
-
-        const row = table.insertRow();
-        row.insertCell(0).textContent = log.user;
-        row.insertCell(1).textContent = log.part;
-        row.insertCell(2).textContent = log.action;
-        row.insertCell(3).textContent = log.notes || "";
-
-        let total = timer.total;
-        if (timer.running && timer.lastStart) {
-          total += Date.now() - timer.lastStart;
-        }
-
-        const timerCell = row.insertCell(4);
-        timerCell.textContent = formatTime(total);
-        timerCell.className = "timer";
-      });
-    }
-
-    loadLiveView();
-    setInterval(loadLiveView, 1000);
   </script>
 </body>
 </html>
