@@ -29,6 +29,7 @@
       <textarea id="notesInput"></textarea>
       <button id="submitLogBtn">Submit Log</button>
       <button id="deleteLogsBtn">Delete All Logs</button>
+      <p id="logMessage" style="color: green;"></p> <!-- Success message -->
     </div>
 
     <div class="log-history">
@@ -43,8 +44,8 @@
             <th>Total Time</th>
           </tr>
         </thead>
-        <tbody>
-          <!-- Rows added dynamically -->
+        <tbody id="logTableBody">
+          <!-- Rows added here -->
         </tbody>
       </table>
     </div>
@@ -73,40 +74,41 @@
     });
 
     // Logout button
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', function() {
-        localStorage.clear();
-        window.location.href = 'index.html';
-      });
-    } else {
-      console.error('Logout button not found');
-    }
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+      localStorage.clear();
+      window.location.href = 'index.html';
+    });
 
-    // Submit log button (test with alert and table row)
-    const submitLogBtn = document.getElementById('submitLogBtn');
-    if (submitLogBtn) {
-      submitLogBtn.addEventListener('click', function() {
-        const part = document.getElementById('partSelect').value;
-        const action = document.getElementById('actionSelect').value;
-        const notes = document.getElementById('notesInput').value;
-        const timestamp = new Date().toISOString();
+    // Submit log button (no alert, add to table, show message)
+    document.getElementById('submitLogBtn').addEventListener('click', function() {
+      const part = document.getElementById('partSelect').value;
+      const action = document.getElementById('actionSelect').value;
+      const notes = document.getElementById('notesInput').value;
+      const timestamp = new Date().toISOString();
 
-        if (!part || !action) {
-          alert('Select part and action.');
-          return;
-        }
+      if (!part || !action) {
+        alert('Please select part and action.');
+        return;
+      }
 
-        alert(`Logged: ${part}, ${action}, Notes: ${notes}, Time: ${timestamp}`);
+      console.log(`Logged: ${part}, ${action}, Notes: ${notes}, Time: ${timestamp}`); // Debug in console
 
-        const logTableBody = document.querySelector('#logTable tbody');
+      // Add to table
+      const logTableBody = document.getElementById('logTableBody');
+      if (logTableBody) {
         const row = document.createElement('tr');
         row.innerHTML = `<td>${part}</td><td>${action}</td><td>${timestamp}</td><td>${notes}</td><td>0 min</td>`;
         logTableBody.appendChild(row);
-      });
-    } else {
-      console.error('Submit button not found');
-    }
+      } else {
+        console.error('Log table body not found');
+      }
+
+      // Show success message
+      document.getElementById('logMessage').textContent = 'Log added successfully!';
+
+      // Clear form
+      document.getElementById('notesInput').value = '';
+    });
   </script>
 </body>
 </html>
