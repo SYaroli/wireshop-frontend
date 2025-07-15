@@ -1,42 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wire Shop Login</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="login-box">
-    <img src="czm-logo.png" alt="CZM Logo" style="width: 120px; margin-bottom: 15px;" />
+    <img src="czm-logo.png" alt="CZM Logo" class="logo">
     <h2>Wire Shop Login</h2>
     <form id="loginForm">
-      <input type="text" id="username" placeholder="Username" required />
-      <input type="password" id="pin" placeholder="PIN" required />
+      <input type="text" id="username" placeholder="Username" required>
+      <input type="password" id="pin" placeholder="PIN" required>
       <button type="submit">Login</button>
+      <p id="login-error" class="error-message" style="display:none; color: red;"></p>
     </form>
-    <p id="login-error" style="color: red; display: none; margin-top: 10px;">Invalid login</p>
   </div>
 
   <script src="users.js"></script>
   <script>
-    const form = document.getElementById('loginForm');
-    const errorBox = document.getElementById('login-error');
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById('loginForm');
+      const errorBox = document.getElementById('login-error');
 
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
 
-      const username = document.getElementById('username').value.trim().toLowerCase();
-      const pin = document.getElementById('pin').value.trim();
+        const username = document.getElementById('username').value.trim().toLowerCase();
+        const pin = document.getElementById('pin').value.trim();
 
-      const user = users.find(u => u.name.toLowerCase() === username && u.pin === pin);
+        if (!Array.isArray(users)) {
+          console.error("User list not loaded.");
+          errorBox.textContent = "System error: user list unavailable.";
+          errorBox.style.display = "block";
+          return;
+        }
 
-      if (user) {
-        localStorage.setItem('loggedInUser', user.name);
-        window.location.href = 'dashboard.html';
-      } else {
-        errorBox.style.display = 'block';
-      }
+        const user = users.find(u => u.name && u.name.toLowerCase() === username && u.pin === pin);
+
+        if (user) {
+          localStorage.setItem('loggedInUser', user.name);
+          window.location.href = 'dashboard.html';
+        } else {
+          errorBox.textContent = "Invalid login.";
+          errorBox.style.display = 'block';
+        }
+      });
     });
   </script>
 </body>
