@@ -65,16 +65,18 @@
         <h1>Wire Shop Login</h1>
     </div>
     <div class="content">
-        <label for="username">Username</label>
-        <input type="text" id="username" placeholder="Username" required>
-        <label for="pin">PIN</label>
-        <input type="password" id="pin" placeholder="PIN" required>
-        <button id="loginBtn">Login</button>
-        <div id="errorMsg" class="error-msg"></div>
+        <form id="loginForm">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="Username" required>
+            <label for="pin">PIN</label>
+            <input type="password" id="pin" placeholder="PIN" required>
+            <button type="submit">Login</button>
+            <div id="errorMsg" class="error-msg"></div>
+        </form>
     </div>
 
     <script>
-        // Temporary hard-coded users for testing (remove after confirming and restore <script src="users.js"></script>)
+        // Temporary hard-coded users for testing
         const users = [
             { username: "shane", pin: "1234", role: "admin" },
             { username: "rafaela", pin: "1234", role: "assembler" },
@@ -82,21 +84,33 @@
             { username: "larissa", pin: "1234", role: "assembler" },
             { username: "tyler", pin: "1234", role: "assembler" }
         ];
-        console.log('Users array loaded for debugging:', users); // Check this in console
+        console.log('Users array loaded for debugging:', users);
 
-        document.getElementById('loginBtn').addEventListener('click', () => {
+        document.getElementById('loginForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+            document.getElementById('errorMsg').textContent = ''; // Clear error at start
             const username = document.getElementById('username').value.trim().toLowerCase();
             const pin = document.getElementById('pin').value.trim();
-            console.log('Attempting login with:', { username, pin }); // Debug in console
+            console.log('Attempting login with:', { username, pin });
             const user = users.find(u => u.username.toLowerCase() === username && u.pin === pin);
             if (user) {
-                console.log('Found user:', user); // Debug
-                localStorage.setItem('user', JSON.stringify(user));
-                window.location.href = user.role === 'admin' ? 'admin.html' : 'dashboard.html';
+                console.log('Found user:', user);
+                try {
+                    localStorage.setItem('user', JSON.stringify(user));
+                    console.log('LocalStorage set successfully');
+                    alert('Login successful, redirecting...'); // Test if this shows
+                    window.location.href = 'dashboard.html'; // Hard-code to dashboard for test
+                    console.log('Redirect attempted');
+                } catch (e) {
+                    console.error('Error during login:', e);
+                    document.getElementById('errorMsg').textContent = 'Login failed (storage error).';
+                }
             } else {
                 document.getElementById('errorMsg').textContent = 'Invalid login.';
             }
         });
     </script>
+</body>
+</html>
 </body>
 </html>
