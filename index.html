@@ -2,104 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Wire Shop Login</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      background: url('czm-logo.png') no-repeat center center fixed;
-      background-size: cover;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-
-    .login-box {
-      background-color: rgba(255, 255, 255, 0.95);
-      padding: 30px 40px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-      text-align: center;
-      min-width: 300px;
-    }
-
-    .login-box h2 {
-      margin-bottom: 20px;
-      font-size: 20px;
-    }
-
-    input[type="text"], input[type="password"] {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-    }
-
-    button {
-      width: 100%;
-      padding: 10px;
-      background-color: #007bff;
-      color: white;
-      font-size: 16px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="login-box">
+    <img src="czm-logo.png" alt="CZM Logo" style="width: 120px; margin-bottom: 15px;" />
     <h2>Wire Shop Login</h2>
     <form id="loginForm">
       <input type="text" id="username" placeholder="Username" required />
       <input type="password" id="pin" placeholder="PIN" required />
       <button type="submit">Login</button>
     </form>
+    <p id="login-error" style="color: red; display: none; margin-top: 10px;">Invalid login</p>
   </div>
 
+  <script src="users.js"></script>
   <script>
-    async function login(event) {
-      event.preventDefault();
+    const form = document.getElementById('loginForm');
+    const errorBox = document.getElementById('login-error');
 
-      const username = document.getElementById("username").value.trim();
-      const pin = document.getElementById("pin").value.trim();
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
 
-      if (!username || !pin) {
-        alert("Please enter both username and PIN.");
-        return;
+      const username = document.getElementById('username').value.trim().toLowerCase();
+      const pin = document.getElementById('pin').value.trim();
+
+      const user = users.find(u => u.name.toLowerCase() === username && u.pin === pin);
+
+      if (user) {
+        localStorage.setItem('loggedInUser', user.name);
+        window.location.href = 'dashboard.html';
+      } else {
+        errorBox.style.display = 'block';
       }
-
-      try {
-        const response = await fetch("https://wireshop-backend.onrender.com/api/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, pin })
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-          localStorage.setItem("username", username);
-          window.location.href = "dashboard.html"; // Update if your landing page is different
-        } else {
-          alert(result.message || "Login failed. Try again.");
-        }
-      } catch (err) {
-        console.error("Login error:", err);
-        alert("Server error. Try again later.");
-      }
-    }
-
-    document.getElementById("loginForm").addEventListener("submit", login);
+    });
   </script>
 </body>
 </html>
