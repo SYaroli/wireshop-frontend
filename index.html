@@ -75,20 +75,11 @@
         </form>
     </div>
 
+    <script src="users.js"></script>
     <script>
-        // Temporary hard-coded users for testing
-        const users = [
-            { username: "shane", pin: "1234", role: "admin" },
-            { username: "rafaela", pin: "1234", role: "assembler" },
-            { username: "michael", pin: "1234", role: "tech" },
-            { username: "larissa", pin: "1234", role: "assembler" },
-            { username: "tyler", pin: "1234", role: "assembler" }
-        ];
-        console.log('Users array loaded for debugging:', users);
-
         document.getElementById('loginForm').addEventListener('submit', (event) => {
             event.preventDefault();
-            document.getElementById('errorMsg').textContent = ''; // Clear error at start
+            document.getElementById('errorMsg').textContent = ''; // Clear error
             const username = document.getElementById('username').value.trim().toLowerCase();
             const pin = document.getElementById('pin').value.trim();
             console.log('Attempting login with:', { username, pin });
@@ -98,8 +89,7 @@
                 try {
                     localStorage.setItem('user', JSON.stringify(user));
                     console.log('LocalStorage set successfully');
-                    alert('Login successful, redirecting...'); // Test if this shows
-                    window.location.href = 'dashboard.html'; // Hard-code to dashboard for test
+                    window.location.replace(user.role === 'admin' ? 'admin.html' : 'dashboard.html');
                     console.log('Redirect attempted');
                 } catch (e) {
                     console.error('Error during login:', e);
@@ -110,7 +100,5 @@
             }
         });
     </script>
-</body>
-</html>
 </body>
 </html>
