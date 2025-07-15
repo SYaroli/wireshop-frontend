@@ -1,50 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wire Shop Login</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wire Shop Login</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="header">
-    <img src="czm-logo.png" alt="CZM Logo" style="max-width: 300px;">
-    <h1>Wire Shop Login</h1>
-  </div>
-  <div class="content">
-    <form id="loginForm">
-      <label for="username">Username</label>
-      <input type="text" id="username" required>
-      <label for="pin">PIN</label>
-      <input type="password" id="pin" required>
-      <button type="submit">Login</button>
-    </form>
-  </div>
+    <div class="header">
+        <img src="czm-logo.png" alt="CZM Logo" style="max-width: 300px;">
+        <h1>Wire Shop Login</h1>
+    </div>
+    <div class="content">
+        <form id="loginForm">
+            <label for="username">Username</label>
+            <input type="text" id="username" required>
+            <label for="pin">PIN</label>
+            <input type="password" id="pin" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
 
-  <script src="users.js"></script>
-  <script>
-    const loginForm = document.getElementById('loginForm');
-    loginForm.addEventListener('submit', function(event) {
-      event.preventDefault();
+    <script src="users.js"></script>
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        loginForm.addEventListener('submit', function(event) {
+            event.preventDefault();
 
-      const username = document.getElementById('username').value.trim().toLowerCase();
-      const pin = document.getElementById('pin').value;
+            const username = document.getElementById('username').value.toLowerCase();
+            const pin = document.getElementById('pin').value;
 
-      const user = users.find(u => u.username.toLowerCase() === username && u.pin === pin);
+            const user = users.find(u => u.username.toLowerCase() === username && u.pin === pin);
 
-      if (user) {
-        localStorage.setItem('userRole', user.role);
-        localStorage.setItem('username', user.username);
-        if (user.role === 'admin') {
-          window.location.href = 'admin.html';
-        } else {
-          window.location.href = 'dashboard.html';
-        }
-      } else {
-        alert('Invalid username or PIN.');
-        loginForm.reset();
-      }
-    });
-  </script>
+            if (user) {
+                localStorage.setItem('userRole', user.role);
+                localStorage.setItem('username', user.username);
+                if (user.role === 'admin') {
+                    window.location.href = 'admin.html';
+                } else {
+                    window.location.href = 'dashboard.html';
+                }
+            } else {
+                alert('Invalid username or PIN.');
+            }
+            loginForm.reset();
+        });
+    </script>
 </body>
 </html>
