@@ -12,9 +12,11 @@
             background-position: center;
             background-repeat: no-repeat;
             background-attachment: fixed;
-            opacity: 0.9; /* Fades the background slightly */
+            opacity: 0.9; /* Fades the background */
             color: #333;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
         }
         .header {
             display: flex;
@@ -34,10 +36,21 @@
             margin-bottom: 20px;
         }
         select, input, button {
-            margin: 10px 0;
+            margin: 5px 0;
             padding: 8px;
             width: 100%;
             box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #2f80ed;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #1c60c7;
         }
         table {
             width: 100%;
@@ -54,6 +67,11 @@
         }
         #expectedTime {
             font-weight: bold;
+            margin: 5px 0;
+        }
+        #partNotes {
+            margin: 5px 0;
+            color: #666;
         }
     </style>
 </head>
