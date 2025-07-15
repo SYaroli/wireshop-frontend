@@ -73,13 +73,24 @@
         <div id="errorMsg" class="error-msg"></div>
     </div>
 
-    <script src="users.js"></script>
     <script>
+        // Temporary hard-coded users for testing (remove after confirming and restore <script src="users.js"></script>)
+        const users = [
+            { username: "shane", pin: "1234", role: "admin" },
+            { username: "rafaela", pin: "1234", role: "assembler" },
+            { username: "michael", pin: "1234", role: "tech" },
+            { username: "larissa", pin: "1234", role: "assembler" },
+            { username: "tyler", pin: "1234", role: "assembler" }
+        ];
+        console.log('Users array loaded for debugging:', users); // Check this in console
+
         document.getElementById('loginBtn').addEventListener('click', () => {
             const username = document.getElementById('username').value.trim().toLowerCase();
             const pin = document.getElementById('pin').value.trim();
+            console.log('Attempting login with:', { username, pin }); // Debug in console
             const user = users.find(u => u.username.toLowerCase() === username && u.pin === pin);
             if (user) {
+                console.log('Found user:', user); // Debug
                 localStorage.setItem('user', JSON.stringify(user));
                 window.location.href = user.role === 'admin' ? 'admin.html' : 'dashboard.html';
             } else {
