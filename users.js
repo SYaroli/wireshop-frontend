@@ -4,6 +4,6 @@ const users = [
   { username: "rafaela", pin: "1234", role: "assembler" },
   { username: "michael", pin: "1234", role: "assembler" },
   { username: "larissa", pin: "1234", role: "assembler" },
-  { username: "tyler", pin: "1234", role: "assembler" }
+  { username: "tyler", pin: "1234", role: "assembler" },
   { username: "carter", pin: "1234", role: "assembler" }
 ];
