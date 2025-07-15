@@ -1,114 +1,242 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wire Shop Dashboard</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wire Shop Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background-image: url('czm-logo.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            opacity: 0.9; /* Fades the background slightly */
+            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .username {
+            font-weight: bold;
+            color: #d32f2f; /* Red to match logo */
+        }
+        .log-section, .log-history {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        select, input, button {
+            margin: 10px 0;
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .success-msg {
+            color: green;
+            margin-top: 10px;
+        }
+        #expectedTime {
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-  <div class="header">
+    <div class="header">
+        <span class="username" id="usernameDisplay"></span>
+        <button id="liveViewBtn">Live View</button>
+        <button id="logoutBtn">Logout</button>
+    </div>
     <h1>Wire Shop Dashboard</h1>
-  </div>
-  <div class="content">
-    <button id="logoutBtn">Logout</button>
-    <a href="admin.html" id="adminLink" style="display: none;">Live View</a>
 
     <div class="log-section">
-      <h2>Log New Entry</h2>
-      <label for="partSelect">Select Part</label>
-      <select id="partSelect" required></select>
-      <label for="actionSelect">Select Action</label>
-      <select id="actionSelect" required>
-        <option value="Start">Start</option>
-        <option value="Pause">Pause</option>
-        <option value="Continue">Continue</option>
-        <option value="Finish">Finish</option>
-      </select>
-      <label for="notesInput">Notes</label>
-      <textarea id="notesInput"></textarea>
-      <button id="submitLogBtn">Submit Log</button>
-      <button id="deleteLogsBtn">Delete All Logs</button>
-      <p id="logMessage" style="color: green;"></p> <!-- Success message -->
+        <h2>Log New Entry</h2>
+        <label for="partSelect">Select Part</label>
+        <select id="partSelect">
+            <option value="">Select Part</option>
+            <!-- Populated by script -->
+        </select>
+        <p id="expectedTime"></p>
+        <p id="partNotes"></p>
+        <label for="actionSelect">Select Action</label>
+        <select id="actionSelect">
+            <option value="">Select Action</option>
+            <option value="Start">Start</option>
+            <option value="Pause">Pause</option>
+            <option value="Continue">Continue</option>
+            <option value="Finish">Finish</option>
+        </select>
+        <label for="notesInput">Enter notes (optional)...</label>
+        <input type="text" id="notesInput" placeholder="Enter notes (optional)...">
+        <button id="submitLogBtn">Submit Log</button>
+        <div id="successMsg" class="success-msg"></div>
     </div>
 
     <div class="log-history">
-      <h2>Log History</h2>
-      <table id="logTable">
-        <thead>
-          <tr>
-            <th>Part Number</th>
-            <th>Action</th>
-            <th>Timestamp</th>
-            <th>Notes</th>
-            <th>Total Time</th>
-          </tr>
-        </thead>
-        <tbody id="logTableBody">
-          <!-- Rows added here -->
-        </tbody>
-      </table>
+        <h2>Log History</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Part Number</th>
+                    <th>Action</th>
+                    <th>Timestamp</th>
+                    <th>Notes</th>
+                    <th>Total Time</th>
+                </tr>
+            </thead>
+            <tbody id="logTableBody">
+                <!-- Populated by script -->
+            </tbody>
+        </table>
+        <button id="deleteLogsBtn">Delete All Logs</button>
     </div>
-  </div>
 
-  <script src="catalog.js"></script>
-  <script>
-    // Auth check
-    if (!localStorage.getItem('userRole')) {
-      alert('Access denied.');
-      window.location.href = 'index.html';
-    }
+    <script src="catalog.js"></script>
+    <script>
+        // Check if logged in
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user) {
+            window.location.href = 'index.html';
+        }
+        document.getElementById('usernameDisplay').textContent = user.username.charAt(0).toUpperCase() + user.username.slice(1);
 
-    // Show admin link if admin
-    if (localStorage.getItem('userRole') === 'admin') {
-      document.getElementById('adminLink').style.display = 'block';
-    }
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        });
 
-    // Populate part dropdown
-    const partSelect = document.getElementById('partSelect');
-    catalog.forEach(item => {
-      const option = document.createElement('option');
-      option.value = item.partNumber;
-      option.textContent = `${item.partNumber} - ${item.name}`;
-      partSelect.appendChild(option);
-    });
+        // Live View (link to admin if admin, or alert)
+        document.getElementById('liveViewBtn').addEventListener('click', () => {
+            if (user.role === 'admin') {
+                window.location.href = 'admin.html';
+            } else {
+                alert('Live View available for admins only.');
+            }
+        });
 
-    // Logout button
-    document.getElementById('logoutBtn').addEventListener('click', function() {
-      localStorage.clear();
-      window.location.href = 'index.html';
-    });
+        // Populate part select and handle selection for expected time/notes
+        const partSelect = document.getElementById('partSelect');
+        catalog.forEach(part => {
+            const option = document.createElement('option');
+            option.value = part.partNumber;
+            option.textContent = `${part.partNumber} - ${part.name}`;
+            partSelect.appendChild(option);
+        });
 
-    // Submit log button (no alert, add to table, show message)
-    document.getElementById('submitLogBtn').addEventListener('click', function() {
-      const part = document.getElementById('partSelect').value;
-      const action = document.getElementById('actionSelect').value;
-      const notes = document.getElementById('notesInput').value;
-      const timestamp = new Date().toISOString();
+        partSelect.addEventListener('change', () => {
+            const selectedPart = catalog.find(p => p.partNumber === partSelect.value);
+            if (selectedPart) {
+                document.getElementById('expectedTime').textContent = `Expected Time: ${selectedPart.hours} hours`;
+                document.getElementById('partNotes').textContent = `Notes: ${selectedPart.notes}`;
+            } else {
+                document.getElementById('expectedTime').textContent = '';
+                document.getElementById('partNotes').textContent = '';
+            }
+        });
 
-      if (!part || !action) {
-        alert('Please select part and action.');
-        return;
-      }
+        // Timer state for current job
+        let currentJob = null; // {partNumber, startTime, pauses: []}
 
-      console.log(`Logged: ${part}, ${action}, Notes: ${notes}, Time: ${timestamp}`); // Debug in console
+        // Submit log
+        document.getElementById('submitLogBtn').addEventListener('click', () => {
+            const partNumber = partSelect.value;
+            const action = document.getElementById('actionSelect').value;
+            const notes = document.getElementById('notesInput').value.trim();
+            if (!partNumber || !action) return alert('Select part and action');
 
-      // Add to table
-      const logTableBody = document.getElementById('logTableBody');
-      if (logTableBody) {
-        const row = document.createElement('tr');
-        row.innerHTML = `<td>${part}</td><td>${action}</td><td>${timestamp}</td><td>${notes}</td><td>0 min</td>`;
-        logTableBody.appendChild(row);
-      } else {
-        console.error('Log table body not found');
-      }
+            const now = Date.now();
+            let payload = {
+                username: user.username,
+                partNumber,
+                action,
+                notes,
+                timestamp: now
+            };
 
-      // Show success message
-      document.getElementById('logMessage').textContent = 'Log added successfully!';
+            if (action === 'Start') {
+                currentJob = { partNumber, startTime: now, pauses: [] };
+                payload.startTime = now;
+            } else if (action === 'Pause' && currentJob) {
+                currentJob.pauses.push({ pauseStart: now });
+            } else if (action === 'Continue' && currentJob && currentJob.pauses.length) {
+                const lastPause = currentJob.pauses[currentJob.pauses.length - 1];
+                lastPause.pauseEnd = now;
+            } else if (action === 'Finish' && currentJob) {
+                payload.endTime = now;
+                let totalTime = now - currentJob.startTime;
+                currentJob.pauses.forEach(p => { if (p.pauseEnd) totalTime -= (p.pauseEnd - p.pauseStart); });
+                payload.totalTime = Math.floor(totalTime / 1000); // seconds
+                currentJob = null;
+            }
 
-      // Clear form
-      document.getElementById('notesInput').value = '';
-    });
-  </script>
+            // Post to backend
+            fetch('https://wireshop-backend.onrender.com/api/log', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(res => res.json()).then(data => {
+                if (data.success) {
+                    document.getElementById('successMsg').textContent = 'Log added successfully!';
+                    fetchLogs();
+                } else {
+                    alert('Error adding log');
+                }
+            }).catch(err => console.error(err));
+        });
+
+        // Fetch and display logs
+        function fetchLogs() {
+            fetch('https://wireshop-backend.onrender.com/api/logs')
+                .then(res => res.json())
+                .then(rows => {
+                    const tableBody = document.getElementById('logTableBody');
+                    tableBody.innerHTML = '';
+                    rows.forEach(row => {
+                        const tr = document.createElement('tr');
+                        const totalTime = row.endTime ? `${Math.floor((row.endTime - row.startTime) / 60000)} min` : 'Ongoing';
+                        tr.innerHTML = `
+                            <td>${row.partNumber}</td>
+                            <td>${row.action}</td>
+                            <td>${new Date(row.timestamp).toLocaleString()}</td>
+                            <td>${row.notes}</td>
+                            <td>${totalTime}</td>
+                        `;
+                        tableBody.appendChild(tr);
+                    });
+                }).catch(err => console.error(err));
+        }
+        fetchLogs(); // Initial load
+
+        // Delete all logs
+        document.getElementById('deleteLogsBtn').addEventListener('click', () => {
+            if (confirm('Delete all logs?')) {
+                fetch('https://wireshop-backend.onrender.com/api/delete-logs', { method: 'DELETE' })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            fetchLogs();
+                            alert('Logs deleted');
+                        }
+                    }).catch(err => console.error(err));
+            }
+        });
+    </script>
 </body>
 </html>
