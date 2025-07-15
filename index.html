@@ -65,5 +65,41 @@
       <button type="submit">Login</button>
     </form>
   </div>
+
+  <script>
+    async function login(event) {
+      event.preventDefault();
+
+      const username = document.getElementById("username").value.trim();
+      const pin = document.getElementById("pin").value.trim();
+
+      if (!username || !pin) {
+        alert("Please enter both username and PIN.");
+        return;
+      }
+
+      try {
+        const response = await fetch("https://wireshop-backend.onrender.com/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, pin })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          localStorage.setItem("username", username);
+          window.location.href = "dashboard.html"; // Update if your landing page is different
+        } else {
+          alert(result.message || "Login failed. Try again.");
+        }
+      } catch (err) {
+        console.error("Login error:", err);
+        alert("Server error. Try again later.");
+      }
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", login);
+  </script>
 </body>
 </html>
