@@ -1,53 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wire Shop Login</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wire Shop Login</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background-image: url('czm-logo.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            opacity: 0.9; /* Fades the background */
+            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 300px;
+        }
+        label, input, button {
+            display: block;
+            width: 100%;
+            margin: 5px 0;
+        }
+        input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 8px;
+            background-color: #2f80ed;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #1c60c7;
+        }
+        .error-msg {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-  <div class="login-box">
-    <img src="czm-logo.png" alt="CZM Logo" class="logo">
-    <h2>Wire Shop Login</h2>
-    <form id="loginForm">
-      <input type="text" id="username" placeholder="Username" required>
-      <input type="password" id="pin" placeholder="PIN" required>
-      <button type="submit">Login</button>
-      <p id="login-error" class="error-message" style="display:none; color: red;"></p>
-    </form>
-  </div>
+    <div class="header">
+        <h1>Wire Shop Login</h1>
+    </div>
+    <div class="content">
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Username" required>
+        <label for="pin">PIN</label>
+        <input type="password" id="pin" placeholder="PIN" required>
+        <button id="loginBtn">Login</button>
+        <div id="errorMsg" class="error-msg"></div>
+    </div>
 
-  <script src="users.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const form = document.getElementById('loginForm');
-      const errorBox = document.getElementById('login-error');
-
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        const username = document.getElementById('username').value.trim().toLowerCase();
-        const pin = document.getElementById('pin').value.trim();
-
-        if (!Array.isArray(users)) {
-          console.error("User list not loaded.");
-          errorBox.textContent = "System error: user list unavailable.";
-          errorBox.style.display = "block";
-          return;
-        }
-
-        const user = users.find(u => u.name && u.name.toLowerCase() === username && u.pin === pin);
-
-        if (user) {
-          localStorage.setItem('loggedInUser', user.name);
-          window.location.href = 'dashboard.html';
-        } else {
-          errorBox.textContent = "Invalid login.";
-          errorBox.style.display = 'block';
-        }
-      });
-    });
-  </script>
+    <script src="users.js"></script>
+    <script>
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            const username = document.getElementById('username').value.trim().toLowerCase();
+            const pin = document.getElementById('pin').value.trim();
+            const user = users.find(u => u.username.toLowerCase() === username && u.pin === pin);
+            if (user) {
+                localStorage.setItem('user', JSON.stringify(user));
+                window.location.href = user.role === 'admin' ? 'admin.html' : 'dashboard.html';
+            } else {
+                document.getElementById('errorMsg').textContent = 'Invalid login.';
+            }
+        });
+    </script>
 </body>
 </html>
