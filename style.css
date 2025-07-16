@@ -1,5 +1,8 @@
+/* Body & Background */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: url('czm-logo.png') no-repeat center center fixed;
+  background-size: contain;
   background-color: #f5f5f5;
   margin: 0;
   padding: 0;
@@ -8,72 +11,67 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-}
-
-.header {
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-h1 {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-}
-
-.content {
-  width: 90%;
-  max-width: 1000px;
-  background: #fff;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.log-section {
-  margin-bottom: 30px;
-}
-
-.log-section h2,
-.log-history h2 {
-  font-size: 1.3rem;
-  margin-bottom: 10px;
   color: #333;
 }
 
-#partSelect,
-#actionSelect,
-#notesInput,
-#submitLogBtn {
-  margin: 5px;
-  padding: 8px;
-  font-size: 1rem;
-  border-radius: 4px;
+/* Login Box Styling */
+.login-box {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+  z-index: 2;
+}
+
+.login-box h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+/* Form Fields */
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0 16px;
   border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
 }
 
-#notesInput {
-  width: 300px;
-  height: 40px;
-  resize: none;
-  vertical-align: middle;
-}
-
-#submitLogBtn {
-  background-color: #2f80ed;
-  color: white;
+/* Button */
+button {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: #fff;
   border: none;
+  border-radius: 6px;
+  font-size: 16px;
   cursor: pointer;
-  padding: 10px 16px;
-  transition: background-color 0.3s;
 }
 
-#submitLogBtn:hover {
-  background-color: #1c60c7;
+button:hover {
+  background-color: #0056b3;
 }
 
-#logoutBtn {
-  background-color: #2f80ed;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4
+/* Error Message */
+.error-message {
+  color: red;
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .login-box {
+    padding: 1rem;
+    max-width: 90%;
+  }
+
+  body {
+    background-size: 90vw auto;
+  }
+}
