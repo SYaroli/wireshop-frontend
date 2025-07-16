@@ -11,17 +11,17 @@
     <h2>Wire Shop Login</h2>
     <form id="loginForm">
       <label for="username">Username:</label>
-      <input type="text" id="username" required />
+      <input type="text" id="username" autocomplete="username" required />
 
       <label for="pin">PIN:</label>
-      <input type="password" id="pin" required />
+      <input type="password" id="pin" autocomplete="current-password" required />
 
       <button type="submit">Login</button>
+      <p id="loginError" class="error-message"></p>
     </form>
-    <p id="loginError" class="error-message"></p>
   </div>
 
-  <script src="users.js"></script>
+  <script src="users.js" defer></script>
   <script src="script.js" defer></script>
 </body>
 </html>
