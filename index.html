@@ -1,46 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wire Shop Login</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wire Shop Login</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="header">
-        <h1>Wire Shop Login</h1>
-    </div>
-    <div class="content">
-        <form id="loginForm">
-            <label for="username">Username</label>
-            <input type="text" id="username" placeholder="Username" required>
-            <label for="pin">PIN</label>
-            <input type="password" id="pin" placeholder="PIN" required>
-            <button type="submit">Login</button>
-            <div id="errorMsg" class="error-msg"></div>
-        </form>
-    </div>
+  <div class="login-box">
+    <h2>Wire Shop Login</h2>
+    <form id="loginForm">
+      <label for="username">Username:</label>
+      <input type="text" id="username" required />
 
-    <script src="users.js"></script>
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', (event) => {
-            event.preventDefault();
-            document.getElementById('errorMsg').textContent = '';
-            const username = document.getElementById('username').value.trim().toLowerCase();
-            const pin = document.getElementById('pin').value.trim();
-            const user = users.find(u => u.username.toLowerCase() === username && u.pin === pin);
-            if (user) {
-                try {
-                    localStorage.setItem('user', JSON.stringify(user));
-                    window.location.replace(user.role === 'admin' ? 'admin.html' : 'dashboard.html');
-                } catch (e) {
-                    console.error('Storage error:', e);
-                    document.getElementById('errorMsg').textContent = 'Login failed (storage error).';
-                }
-            } else {
-                document.getElementById('errorMsg').textContent = 'Invalid login.';
-            }
-        });
-    </script>
+      <label for="pin">PIN:</label>
+      <input type="password" id="pin" required />
+
+      <button type="submit">Login</button>
+    </form>
+    <p id="loginError" class="error-message"></p>
+  </div>
+  <script src="users.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
