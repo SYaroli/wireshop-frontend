@@ -3,41 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Live View</title>
+  <title>Wire Shop Dashboard</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="header">
-    <a href="dashboard.html">← Back to Dashboard</a>
-    <h1>Live Technician Activity</h1>
-  </div>
-  <div class="content">
-    <table id="activityTable">
-      <thead>
-        <tr>
-          <th>Technician</th>
-          <th>Part</th>
-          <th>Action</th>
-          <th>Notes</th>
-          <th>Time Active</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Rows will be added here dynamically -->
-      </tbody>
-    </table>
+  <div class="dashboard-header">
+    <h1>Wire Shop Dashboard</h1>
+    <p id="welcome-message">Welcome, [User]</p>
+    <div class="header-buttons">
+      <button id="liveViewBtn">Live View</button>
+      <button id="logoutBtn">Logout</button>
+    </div>
   </div>
 
-  <script>
-    // Auth check: Only allow if logged in as admin
-    const userRole = localStorage.getItem('userRole');
-    if (!userRole || userRole !== 'admin') {
-      alert('Access denied.');
-      window.location.href = 'index.html'; // Redirect to login
-    } else {
-      console.log('Admin access granted for:', localStorage.getItem('username')); // Debug in console
-      // Future code to load live activity goes here
-    }
-  </script>
+  <div class="dashboard-box">
+    <h2>Log New Entry</h2>
+    <select id="partSelect">
+      <option value="">Select Part</option>
+    </select>
+    <input type="text" id="expectedTime" readonly placeholder="Expected Time">
+    <input type="text" id="partNotes" readonly placeholder="Notes">
+    <select id="actionSelect">
+      <option value="">Select Action</option>
+      <option value="Start">Start</option>
+      <option value="Pause">Pause</option>
+      <option value="Continue">Continue</option>
+      <option value="Finish">Finish</option>
+    </select>
+    <input type="text" id="notes" placeholder="Enter notes (optional)...">
+    <button id="submitLog">Submit Log</button>
+  </div>
+
+  <div class="dashboard-box">
+    <h2>Log History</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Part Number</th>
+          <th>Action</th>
+          <th>Timestamp</th>
+          <th>Notes</th>
+          <th>Total Time</th>
+        </tr>
+      </thead>
+      <tbody id="logTableBody"></tbody>
+    </table>
+    <button id="deleteAllLogs">Delete All Logs</button>
+  </div>
+
+  <script src="catalog.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
