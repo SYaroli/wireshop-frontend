@@ -8,42 +8,88 @@ body {
   padding: 0;
   min-height: 100vh;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  padding-top: 20px;
 }
 
-/* Login Box */
-.login-box {
+/* Dashboard Header */
+.dashboard-header {
   background-color: rgba(255, 255, 255, 0.9);
-  padding: 2rem;
+  padding: 1rem 2rem;
+  border-radius: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  max-width: 800px;
+  width: 90%;
+}
+
+.dashboard-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.dashboard-header p {
+  margin: 5px 0 10px;
+  font-size: 1rem;
+  color: #666;
+}
+
+.header-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.header-buttons button {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.header-buttons button:hover {
+  background-color: #0056b3;
+}
+
+/* Dashboard Boxes (for sections) */
+.dashboard-box {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 1.5rem;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  max-width: 400px;
-  width: 100%;
-  text-align: center;
-}
-
-.login-box h2 {
+  max-width: 800px;
+  width: 90%;
   margin-bottom: 20px;
-}
-
-.login-box label {
-  display: block;
-  margin: 10px 0 5px;
   text-align: left;
 }
 
-.login-box input[type="text"],
-.login-box input[type="password"] {
+.dashboard-box h2 {
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.dashboard-box select,
+.dashboard-box input[type="text"],
+.dashboard-box textarea {
   width: 100%;
   padding: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
+  box-sizing: border-box;
 }
 
-.login-box button {
+.dashboard-box textarea {
+  height: 60px;
+  resize: vertical;
+}
+
+.dashboard-box button {
   width: 100%;
   padding: 10px;
   background-color: #007bff;
@@ -52,24 +98,46 @@ body {
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
-}
-
-.login-box button:hover {
-  background-color: #0056b3;
-}
-
-.error-message {
-  color: red;
   margin-top: 10px;
 }
 
+.dashboard-box button:hover {
+  background-color: #0056b3;
+}
+
+/* Table Styles */
+.dashboard-box table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 15px;
+}
+
+.dashboard-box th,
+.dashboard-box td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.dashboard-box th {
+  background-color: #f8f8f8;
+}
+
+.dashboard-box td.action-pause {
+  color: red;
+  font-weight: bold;
+}
+
+/* Responsive */
 @media (max-width: 500px) {
   body {
     background-size: 90vw auto;
+    padding-top: 10px;
   }
 
-  .login-box {
+  .dashboard-header,
+  .dashboard-box {
     padding: 1rem;
-    max-width: 90%;
+    width: 95%;
   }
 }
