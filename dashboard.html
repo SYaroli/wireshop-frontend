@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wire Shop Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header-box">
+        <h1 id="welcome-message"></h1>
+        <div class="header-buttons">
+            <button id="liveViewBtn">Live View</button>
+            <button id="logoutBtn">Logout</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Log New Entry</h2>
+        <label for="partSelect">Select Part</label>
+        <select id="partSelect">
+            <option value="">-- Select Part --</option>
+        </select>
+
+        <div id="partInfo" class="info-group">Expected Time: -- hours<br>Notes: --</div>
+
+        <label for="actionSelect">Select Action</label>
+        <select id="actionSelect">
+            <option value="">-- Select Action --</option>
+            <option value="Start">Start</option>
+            <option value="Pause">Pause</option>
+            <option value="Continue">Continue</option>
+            <option value="Finish">Finish</option>
+        </select>
+
+        <label for="notes">Notes</label>
+        <textarea id="notes"></textarea>
+
+        <button id="submitLog">Submit Log</button>
+    </div>
+
+    <div class="card">
+        <h2>Log History</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Part Number</th>
+                    <th>Action</th>
+                    <th>Timestamp</th>
+                    <th>Notes</th>
+                    <th>Total Time</th>
+                </tr>
+            </thead>
+            <tbody id="logTableBody"></tbody>
+        </table>
+        <button id="deleteAllLogs" class="delete-btn">Delete All Logs</button>
+    </div>
+
+    <script src="catalog.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
